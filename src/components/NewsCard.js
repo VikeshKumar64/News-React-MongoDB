@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useBookmarks } from '../context/BookmarkContext';
-import { saveBookmark } from '../api/serverApi';
 import { getCategoryInfo, formatDate } from '../data/newsData';
 
 /* ──────────────────────────── SVG Icons ─────────────────────────── */
@@ -468,24 +467,12 @@ const NewsCard = ({ article, variant = 'default' }) => {
   const handleBookmark = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    // If user is logged in, persist to server as well
-    const user = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('user') || 'null') : null;
     if (bookmarked) {
       removeBookmark(article.id);
       return;
     }
-
+    // addBookmark() in BookmarkContext already persists to the server
     addBookmark(article);
-    if (user && (user._id || user.id)) {
-      // Fire-and-forget; keep UI responsive. Simple error log on failure.
-      saveBookmark({
-        userId: user._id || user.id,
-        title: article.title,
-        description: article.excerpt || article.description || '',
-        image: article.image || article.urlToImage || '',
-        url: article.externalUrl || article.url || article.external_url || ''
-      }).catch(err => console.error('Failed to save bookmark to server', err));
-    }
   };
 
   switch (variant) {

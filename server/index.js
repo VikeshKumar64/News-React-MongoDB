@@ -74,6 +74,10 @@ app.post('/bookmark', async (req, res) => {
     const { userId, title, description, image, url } = req.body;
     if (!userId || !title || !url) return res.status(400).json({ message: 'Missing fields' });
 
+    // Prevent duplicate bookmarks for the same user + URL
+    const existing = await Bookmark.findOne({ userId, url });
+    if (existing) return res.status(200).json(existing);
+
     const bm = new Bookmark({ userId, title, description, image, url });
     await bm.save();
     res.status(201).json(bm);

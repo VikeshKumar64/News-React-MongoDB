@@ -32,7 +32,7 @@ export const BookmarkProvider = ({ children }) => {
       localStorage.removeItem('bookmarks');
     }
     return () => { mounted = false; };
-  }, [user?.id, user?._id]);
+  }, [user]);
 
   const addBookmark = async (article) => {
     if (!user) return; // Prevent bookmarking if not logged in
