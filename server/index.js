@@ -12,8 +12,10 @@ app.use(cors()); // allow requests from frontend
 app.use(express.json()); // parse JSON bodies
 
 // Connect to MongoDB using provided connection string
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://vikesh:vikesh123@cluster0.c2e8nf3.mongodb.net/mydb';
+
 mongoose
-  .connect('mongodb+srv://vikesh:vikesh123@cluster0.c2e8nf3.mongodb.net/mydb', {
+  .connect(MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

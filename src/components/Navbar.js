@@ -529,6 +529,30 @@ const Navbar = () => {
             ))}
           </nav>
 
+          {/* User info (mobile only) */}
+          {user && (
+            <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-gray-50 dark:bg-dark-surface border border-gray-100 dark:border-dark-border">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                  {user.name?.[0]?.toUpperCase() || '?'}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{user.name}</p>
+                  <p className="text-[10px] text-gray-400 dark:text-dark-muted truncate">{user.email}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => { logout(); setIsMenuOpen(false); }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex-shrink-0"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                Logout
+              </button>
+            </div>
+          )}
+
           {/* Footer row inside drawer */}
           <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-dark-border">
             <span className="text-xs text-gray-400 dark:text-gray-600 font-medium">
