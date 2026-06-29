@@ -3,6 +3,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const fetch = require('node-fetch');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -110,6 +111,46 @@ app.delete('/bookmark/:id', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// NewsAPI Proxy Routes to bypass localhost-only restriction in production
+app.get('/api/news/top-headlines', async (req, res) => {
+  try {
+    const { country = 'us', category, pageSize = 20 } = req.query;
+    const apiKey = process.env.NEWS_API_KEY || 'ffee724039374e79bdf72d4c8a077aae';
+    let url = `https://newsapi.org/v2/top-headlines?country=${country}&pageSize=${pageSize}&apiKey=${apiKey}`;
+    if (category && category !== 'all') {
+      url += `&category=${category}`;
+    }
+    
+    const response = await fetch(url);
+    const data = await response.json();
+    if (!response.ok) {
+      return res.status(response.status).json(data);
+    }
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error fetching from NewsAPI' });
+  }
+});
+
+app.get('/api/news/everything', async (req, res) => {
+  try {
+    const { q, pageSize = 20, sortBy = 'publishedAt' } = req.query;
+    const apiKey = process.env.NEWS_API_KEY || 'ffee724039374e79bdf72d4c8a077aae';
+    const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(q)}&pageSize=${pageSize}&sortBy=${sortBy}&language=en&apiKey=${apiKey}`;
+    
+    const response = await fetch(url);
+    const data = await response.json();
+    if (!response.ok) {
+      return res.status(response.status).json(data);
+    }
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error fetching from NewsAPI' });
   }
 });
 

@@ -18,19 +18,17 @@ import axios from 'axios';
 
 /* ── Constants ─────────────────────────────────────────────────── */
 
-const API_KEY  = process.env.REACT_APP_NEWS_API_KEY;
-const BASE_URL = 'https://newsapi.org/v2';
+const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'http://localhost:4000';
+const BASE_URL = `${SERVER_URL}/api/news`;
 
-/** True only when the user has filled in a real API key */
-export const isApiConfigured = () =>
-  Boolean(API_KEY && API_KEY !== 'your_newsapi_key_here');
+/** True since the backend proxy handles configuration and API Key storage */
+export const isApiConfigured = () => true;
 
 /* ── Axios instance ─────────────────────────────────────────────── */
 
 const client = axios.create({
   baseURL: BASE_URL,
-  timeout: 12000,
-  headers: { 'X-Api-Key': API_KEY ?? '' },
+  timeout: 15000,
 });
 
 /* Request interceptor – log outgoing calls in development */
